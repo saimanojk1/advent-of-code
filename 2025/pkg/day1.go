@@ -19,7 +19,10 @@ func Day1(inputFilePath string) (int, error) {
 	for scanner.Scan() {
 		line := scanner.Text()
 
+		initialIndex := currentIndex
 		moveIndex, err := strconv.Atoi(line[1:])
+		numberOfRotations := moveIndex / 100
+		zeroCounter += numberOfRotations
 		moveIndex = moveIndex % 100
 		if err != nil {
 			return 0, err
@@ -29,13 +32,19 @@ func Day1(inputFilePath string) (int, error) {
 		} else {
 			currentIndex = currentIndex + moveIndex
 		}
-		if currentIndex < 0 {
+
+		if currentIndex == 0 && moveIndex != 0 {
+			zeroCounter++
+		} else if currentIndex < 0 {
+			if initialIndex != 0 {
+				zeroCounter++
+			}
 			currentIndex = 100 + currentIndex
 		} else if currentIndex > 99 {
 			currentIndex = currentIndex - 100
-		}
-		if currentIndex == 0 {
-			zeroCounter++
+			if initialIndex != 0 {
+				zeroCounter++
+			}
 		}
 	}
 	return zeroCounter, nil
